@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Pengelolaan Data Buku</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --success-bg: #dcfce7;
+            --success-text: #166534;
+            --error-bg: #fee2e2;
+            --error-text: #991b1b;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 24px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 1.75rem;
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .card h2 {
+            font-size: 1.25rem;
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #334155;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 6px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 0.95rem;
+        }
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+        .alert {
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .alert-success {
+            background-color: var(--success-bg);
+            color: var(--success-text);
+        }
+        .alert-error {
+            background-color: var(--error-bg);
+            color: var(--error-text);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+            color: #475569;
+        }
+        .btn-danger {
+            color: var(--danger);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .btn-danger:hover {
+            text-decoration: underline;
+        }
+        .empty-row {
+            text-align: center;
+            color: #64748b;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Aplikasi Pengelolaan Data Buku</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if 'Sukses' in message %}alert-success{% else %}alert-error{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="card">
+            <h2>Form Tambah Data Buku</h2>
+            <form action="/tambah" method="POST">
+                <div class="form-group">
+                    <label for="id_buku">ID Buku / Kode:</label>
+                    <input type="text" id="id_buku" name="id_buku" placeholder="Contoh: B001">
+                </div>
+                <div class="form-group">
+                    <label for="judul">Judul Buku:</label>
+                    <input type="text" id="judul" name="judul" placeholder="Contoh: Pemrograman Python">
+                </div>
+                <div class="form-group">
+                    <label for="penulis">Penulis:</label>
+                    <input type="text" id="penulis" name="penulis" placeholder="Contoh: Andi Setiawan">
+                </div>
+                <div class="form-group">
+                    <label for="tahun">Tahun Terbit:</label>
+                    <input type="number" id="tahun" name="tahun" placeholder="Contoh: 2024">
+                </div>
+                <button type="submit">Tambah Data</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Daftar Data Buku</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Buku</th>`
+                        <th>Judul Buku</th>
+                        <th>Penulis</th>
+                        <th>Tahun</th>
+                        <th>Identitas Singkat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for buku in data_buku %}
+                    <tr>
+                        <td>{{ buku.id_buku }}</td>
+                        <td>{{ buku.judul }}</td>`
+                        <td>{{ buku.penulis }}</td>
+                        <td>{{ buku.tahun }}</td>
+                        <td>{{ buku.identitas_singkat() }}</td>
+                        <td>
+                            <a href="/hapus/{{ buku.id_buku }}" class="btn-danger" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="empty-row">Belum ada data buku yang tersimpan.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
